@@ -1,0 +1,1390 @@
+{
+  "info": {
+    "_postman_id": "d1773d79-78f2-414f-9436-0d62326a9fcd" ,
+    "name": "Ubiwhere Challenge" ,
+    "description": "**What does the API do?**\n- Create occurrences (with geographic location and author associated with the occurrence). The default state of a new occurrence is **Waiting Validation**.\n- Update occurrences (in order to change the occurrence's state to **Validated** or **Solved** by a System Admin).\n- Filtering by Author, Category and Location (within a certain radius of this location).\n\n**Authentication**\nThis API uses JWT authentication, and some of the endpoints requires a valid JWT access token.\n\n**Configuration**\nThis collection requires two predefined environment variables, which are listed below.\n\nurl: The root url of the Flask app. The default value should be 127.0.0.1:5000 (if it is running locally)\n\naccess_token: (optional) JWT used for login. It will be set automatically by some of the request test scripts.\n\n**Error Codes**\n\n**400**: When there is a bad request\n\n**401**: When there is an unsuccessful authentication\n\n**404**: When the requested data is not found\n\n**500**: When something else unexpected occurs" ,
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  } ,
+  "item": [
+    {
+      "name": "user" ,
+      "item": [
+        {
+          "name": "register a new user" ,
+          "request": {
+            "method": "POST" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "value": "application/json"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": "{\n\t\"username\": \"UbiUser\",\n\t\"password\": \"1234\",\n\t\"admin\": \"True\"\n}"
+            } ,
+            "url": {
+              "raw": "{{url}}/register" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "register"
+              ]
+            } ,
+            "description": "Register a new user. If the field admin is true when registering, the user will have permissions to update occurrences or managing users."
+          } ,
+          "response": [
+            {
+              "name": "register a new user" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"username\": \"UbiUser\",\n\t\"password\": \"1234\",\n\t\"admin\": \"True\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/register" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "register"
+                  ]
+                }
+              } ,
+              "status": "CREATED" ,
+              "code": 201 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "48" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Wed, 23 May 2018 15:55:58 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"User created successfully.\"\n}\n"
+            }
+          ]
+        } ,
+        {
+          "name": "login" ,
+          "event": [
+            {
+              "listen": "test" ,
+              "script": {
+                "id": "8c0c0ed6-c206-4c88-9349-429e024e312b" ,
+                "exec": [
+                  "var jsonData = pm.response.json();" ,
+                  "pm.test(\"access_token not empty\", function () {" ,
+                  "    pm.expect(jsonData.access_token).not.eql(undefined);" ,
+                  "});" ,
+                  "// set access token as environement variable" ,
+                  "if (jsonData.access_token !== undefined) {" ,
+                  "    postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);" ,
+                  "} else {" ,
+                  "    postman.setEnvironmentVariable(\"access_token\", null);" ,
+                  "}"
+                ] ,
+                "type": "text/javascript"
+              }
+            }
+          ] ,
+          "request": {
+            "method": "POST" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "value": "application/json"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": "{\n  \"username\" : \"UbiUser\",\n  \"password\" : \"1234\"\n}"
+            } ,
+            "url": {
+              "raw": "{{url}}/login" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "login"
+              ]
+            } ,
+            "description": "Login using username and password. If authenticated, an active fresh `access_token` will be issued."
+          } ,
+          "response": [
+            {
+              "name": "login successfully" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n  \"username\" : \"UbiUser\",\n  \"password\" : \"1234\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/login" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "login"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "570" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Wed, 23 May 2018 16:12:22 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1MjcwOTE5NDIsIm5iZiI6MTUyNzA5MTk0MiwianRpIjoiOWUxZjQxMzUtODU0Ny00MWYzLWJkNjMtMzRiYzcyNDc1MmI0IiwiZXhwIjoxNTI3MDkyODQyLCJpZGVudGl0eSI6MSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.ekXY9wyn50mQ2xk5smTUL10b5igKoY_placeholder\",\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1MjcwOTE5NDIsIm5iZiI6MTUyNzA5MTk0MiwianRpIjoiYmY4YjhmZjktYjMxMC00NDJjLTg4MzAtZjU2MzdkNTU1OGE5IiwiZXhwIjoxNTI5NjgzOTQyLCJpZGVudGl0eSI6MSwidHlwZSI6InJlZnJlc2gifQ.d1D-QnRfZTgNJBrAUSJXu4J8GZ1tmD_placeholder\"\n}"
+            } ,
+            {
+              "name": "login failed" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n  \"username\" : \"UbiUser\",\n  \"password\" : \"wrong_password\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/login" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "login"
+                  ]
+                }
+              } ,
+              "status": "UNAUTHORIZED" ,
+              "code": 401 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "42" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Wed, 23 May 2018 16:13:14 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"Invalid Credentials!\"\n}\n"
+            }
+          ]
+        } ,
+        {
+          "name": "logout" ,
+          "event": [
+            {
+              "listen": "test" ,
+              "script": {
+                "id": "dc763e9b-e6c7-4ff3-9766-637976a5c64b" ,
+                "type": "text/javascript" ,
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ] ,
+          "request": {
+            "method": "POST" ,
+            "header": [
+              {
+                "key": "Authorization" ,
+                "value": "Bearer {{access_token}}"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/logout" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "logout"
+              ]
+            } ,
+            "description": "Logout a user."
+          } ,
+          "response": [
+            {
+              "name": "logout" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Authorization" ,
+                    "value": "Bearer {{access_token}}"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": ""
+                } ,
+                "url": {
+                  "raw": "{{url}}/logout" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "logout"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "58" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Thu, 24 May 2018 18:32:11 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"User UbiUser successfully logged out.\"\n}\n"
+            }
+          ]
+        } ,
+        {
+          "name": "find user by id" ,
+          "event": [
+            {
+              "listen": "test" ,
+              "script": {
+                "id": "4311f7d8-283e-4ba6-843b-d67de64489de" ,
+                "exec": [
+                  "var jsonData = pm.response.json();" ,
+                  "pm.test(\"user confirmation found\", function () {" ,
+                  "    pm.expect(jsonData.confirmation).not.eql(undefined);" ,
+                  "});" ,
+                  "" ,
+                  "if (jsonData.confirmation !== undefined) {" ,
+                  "    pm.environment.set(\"confirmation_id\", jsonData.confirmation.id);" ,
+                  "}"
+                ] ,
+                "type": "text/javascript"
+              }
+            }
+          ] ,
+          "request": {
+            "method": "GET" ,
+            "header": [
+              {
+                "key": "Authorization" ,
+                "value": "Bearer {{access_token}}" ,
+                "type": "text"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/user/1" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "user" ,
+                "1"
+              ]
+            } ,
+            "description": "Find a user by its id."
+          } ,
+          "response": [
+            {
+              "name": "get user by id" ,
+              "originalRequest": {
+                "method": "GET" ,
+                "header": [] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": ""
+                } ,
+                "url": {
+                  "raw": "{{url}}/user/1" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "user" ,
+                    "1"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "242" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Thu, 24 May 2018 18:31:14 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"admin\": true,\n    \"id\": 1,\n    \"username\": \"UbiUser\"\n}\n"
+            } ,
+            {
+              "name": "user not found" ,
+              "originalRequest": {
+                "method": "GET" ,
+                "header": [] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": ""
+                } ,
+                "url": {
+                  "raw": "{{url}}/user/2" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "user" ,
+                    "2"
+                  ]
+                }
+              } ,
+              "status": "NOT FOUND" ,
+              "code": 404 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "36" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Thu, 24 May 2018 18:32:24 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"User not found\"\n}\n"
+            }
+          ]
+        } ,
+        {
+          "name": "delete user by id" ,
+          "request": {
+            "method": "DELETE" ,
+            "header": [
+              {
+                "key": "Authorization" ,
+                "value": "Bearer {{access_token}}" ,
+                "type": "text"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/user/1" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "user" ,
+                "1"
+              ]
+            } ,
+            "description": "Delete a user by its id."
+          } ,
+          "response": [
+            {
+              "name": "delete user successfully" ,
+              "originalRequest": {
+                "method": "DELETE" ,
+                "header": [] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"username\": \"UbiUser\",\n\t\"password\": \"1234\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/user/1" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "user" ,
+                    "1"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "35" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Wed, 23 May 2018 16:13:47 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"User deleted.\"\n}\n"
+            } ,
+            {
+              "name": "delete non-existing user" ,
+              "originalRequest": {
+                "method": "DELETE" ,
+                "header": [] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": ""
+                } ,
+                "url": {
+                  "raw": "{{url}}/user/5" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "user" ,
+                    "5"
+                  ]
+                }
+              } ,
+              "status": "NOT FOUND" ,
+              "code": 404 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Length" ,
+                  "value": "36" ,
+                  "name": "Content-Length" ,
+                  "description": "The length of the response body in octets (8-bit bytes)"
+                } ,
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json" ,
+                  "name": "Content-Type" ,
+                  "description": "The mime type of this content"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Wed, 23 May 2018 16:14:08 GMT" ,
+                  "name": "Date" ,
+                  "description": "The date and time that the message was sent"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.14.1 Python/3.6.1" ,
+                  "name": "Server" ,
+                  "description": "A name for the server"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"User not found\"\n}\n"
+            }
+          ]
+        }
+      ]
+    } ,
+    {
+      "name": "occurrence" ,
+      "item": [
+        {
+          "name": "create occurrence" ,
+          "request": {
+            "method": "POST" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "name": "Content-Type" ,
+                "type": "text" ,
+                "value": "application/json"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": "{\n\t\"description\": \"Bad Pavement, needs to be fixed\",\n\t\"author\": \"Mark\",\n\t\"geo\": { \n\t\"latitude\": 41.188403,\n\t\"longitude\": -8.498920\n\t},\n\t\"category\": \"Road_Condition\"\n}"
+            } ,
+            "url": {
+              "raw": "{{url}}/occurrence" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "occurrence"
+              ]
+            } ,
+            "description": "Creating an occurrence with at least a location and an author (mandatory fields).\n\nDefault state of the occurrence is 'Waiting Validation'.\nThe other two states available are: '**Validated**' or '**Solved**'.\n\nDescription and Category are optional.\nCategory can be one of the following:\n\n**CONSTRUCTION**: planned road work\n\n**SPECIAL_EVENT**: special events (fair, sport event, etc.)\n\n**INCIDENT**: accidents and other unexpected events\n\n**WEATHER_CONDITION**: weather condition affecting the road\n\n**ROAD_CONDITION**: status of the road that might affect travellers (potholes, bad pavement, etc.)\n"
+          } ,
+          "response": [
+            {
+              "name": "create second occurrence successfully" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "type": "text" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"description\": \"Fair Event\",\n\t\"author\": \"John\",\n\t\"geo\": { \n\t\"latitude\": 40.646899, \n\t\"longitude\": -8.643011\n\t},\n\t\"category\": \"SPECIAL_EVENT\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence"
+                  ]
+                }
+              } ,
+              "status": "CREATED" ,
+              "code": 201 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "255"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:38:04 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"description\": \"Fair Event\",\n    \"creation_date\": \"2019-04-23T14:38:04+00:00\",\n    \"location\": \"(40.646899 -8.643011)\",\n    \"state\": \"Waiting Validation\",\n    \"update_date\": null,\n    \"author\": \"John\",\n    \"category\": \"SPECIAL_EVENT\",\n    \"id\": 2\n}"
+            } ,
+            {
+              "name": "missing author" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "type": "text" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"description\": \"Bad Pavement, needs to be fixed\",\n\t\"geo\": { \n\t\"latitude\": 41.188403,\n\t\"longitude\": -8.498920\n\t},\n\t\"category\": \"Road_Condition\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence"
+                  ]
+                }
+              } ,
+              "status": "BAD REQUEST" ,
+              "code": 400 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "61"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:34:07 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"author\": [\n        \"Missing data for required field.\"\n    ]\n}"
+            } ,
+            {
+              "name": "invalid category" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "type": "text" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"description\": \"Bad Pavement, needs to be fixed\",\n\t\"author\": \"Mark\",\n\t\"geo\": { \n\t\"latitude\": 41.188403,\n\t\"longitude\": -8.498920\n\t},\n\t\"category\": \"Unknown\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence"
+                  ]
+                }
+              } ,
+              "status": "NOT FOUND" ,
+              "code": 404 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "148"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:32:20 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"Invalid Category, please insert one of the following: CONSTRUCTION, SPECIAL_EVENT, INCIDENT, WEATHER_CONDITION, ROAD_CONDITION\"\n}"
+            } ,
+            {
+              "name": "create occurrence successfully" ,
+              "originalRequest": {
+                "method": "POST" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "type": "text" ,
+                    "value": "application/json"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"description\": \"Bad Pavement, needs to be fixed\",\n\t\"author\": \"Mark\",\n\t\"geo\": { \n\t\"latitude\": 41.188403,\n\t\"longitude\": -8.498920\n\t},\n\t\"category\": \"Road_Condition\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence"
+                  ]
+                }
+              } ,
+              "status": "CREATED" ,
+              "code": 201 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "276"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:33:18 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"description\": \"Bad Pavement, needs to be fixed\",\n    \"creation_date\": \"2019-04-23T14:33:18+00:00\",\n    \"location\": \"(41.188403 -8.49892)\",\n    \"state\": \"Waiting Validation\",\n    \"update_date\": null,\n    \"author\": \"Mark\",\n    \"category\": \"ROAD_CONDITION\",\n    \"id\": 1\n}"
+            }
+          ]
+        } ,
+        {
+          "name": "upsert an occurrence" ,
+          "request": {
+            "method": "PUT" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "name": "Content-Type" ,
+                "type": "text" ,
+                "value": "application/json"
+              } ,
+              {
+                "key": "Authorization" ,
+                "value": "Bearer {{access_token}}" ,
+                "type": "text"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": "{\n\t\"state\": \"Validated\"\n}"
+            } ,
+            "url": {
+              "raw": "{{url}}/occurrence/1" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "occurrence" ,
+                "1"
+              ]
+            } ,
+            "description": "Update an occurrence or create a new one(both only with admin rights), the example features only the update part, since creating is similar to the **POST** Request (it will create a new one if the id is not specified, using only /occurrence without an ID)."
+          } ,
+          "response": [
+            {
+              "name": "upsert an occurrence with an invalid state" ,
+              "originalRequest": {
+                "method": "PUT" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "type": "text" ,
+                    "value": "application/json"
+                  } ,
+                  {
+                    "key": "Authorization" ,
+                    "value": "Bearer {{access_token}}" ,
+                    "type": "text"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"state\": \"Unknown\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence/1" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence" ,
+                    "1"
+                  ]
+                }
+              } ,
+              "status": "NOT FOUND" ,
+              "code": 404 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "109"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:39:02 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"Invalid state. It should be one of the following: Waiting Validation, Validated, Solved\"\n}"
+            } ,
+            {
+              "name": "upsert an occurrence successfully" ,
+              "originalRequest": {
+                "method": "PUT" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "type": "text" ,
+                    "value": "application/json"
+                  } ,
+                  {
+                    "key": "Authorization" ,
+                    "value": "Bearer {{access_token}}" ,
+                    "type": "text"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"state\": \"Validated\"\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence/1" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence" ,
+                    "1"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "290"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:38:38 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"description\": \"Bad Pavement, needs to be fixed\",\n    \"creation_date\": \"2019-04-23T14:33:18+00:00\",\n    \"location\": \"(41.188403 -8.49892)\",\n    \"state\": \"Validated\",\n    \"update_date\": \"2019-04-23T14:38:38+00:00\",\n    \"author\": \"Mark\",\n    \"category\": \"ROAD_CONDITION\",\n    \"id\": 1\n}"
+            }
+          ]
+        } ,
+        {
+          "name": "delete an occurrence" ,
+          "request": {
+            "method": "DELETE" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "name": "Content-Type" ,
+                "type": "text" ,
+                "value": "application/json"
+              } ,
+              {
+                "key": "Authorization" ,
+                "value": "Bearer {{access_token}}" ,
+                "type": "text"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/occurrence/1" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "occurrence" ,
+                "1"
+              ]
+            }
+          } ,
+          "response": []
+        } ,
+        {
+          "name": "search by location and radius" ,
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          } ,
+          "request": {
+            "method": "GET" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "name": "Content-Type" ,
+                "value": "application/json" ,
+                "type": "text"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/occurrence/search/location=(41.188403 -8.49892)&radius=70000" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "occurrence" ,
+                "search" ,
+                "location=(41.188403 -8.49892)&radius=70000"
+              ]
+            }
+          } ,
+          "response": [
+            {
+              "name": "search by location and radius only using 60 Km (Aveiro location doesn't show up)" ,
+              "originalRequest": {
+                "method": "GET" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "value": "application/json" ,
+                    "type": "text"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": ""
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence/search/location=(41.188403 -8.49892)&radius=60000" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence" ,
+                    "search" ,
+                    "location=(41.188403 -8.49892)&radius=60000"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "401"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:43:35 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"occurrences\": [\n        {\n            \"description\": \"Bad Pavement, needs to be fixed\",\n            \"creation_date\": \"2019-04-23T14:33:18+00:00\",\n            \"location\": \"(41.188403 -8.49892)\",\n            \"state\": \"Validated\",\n            \"update_date\": \"2019-04-23T14:38:38+00:00\",\n            \"author\": \"Mark\",\n            \"category\": \"ROAD_CONDITION\",\n            \"id\": 1\n        }\n    ]\n}"
+            } ,
+            {
+              "name": "search by location and radius, by 70 km radius (Valongo to Aveiro (2nd occurrence) are at least 62 km apart)" ,
+              "originalRequest": {
+                "method": "GET" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "value": "application/json" ,
+                    "type": "text"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": ""
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence/search/location=(41.188403 -8.49892)&radius=70000" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence" ,
+                    "search" ,
+                    "location=(41.188403 -8.49892)&radius=70000"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "737"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:39:53 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"occurrences\": [\n        {\n            \"description\": \"Fair Event\",\n            \"creation_date\": \"2019-04-23T14:38:04+00:00\",\n            \"location\": \"(40.646899 -8.643011)\",\n            \"state\": \"Waiting Validation\",\n            \"update_date\": null,\n            \"author\": \"John\",\n            \"category\": \"SPECIAL_EVENT\",\n            \"id\": 2\n        },\n        {\n            \"description\": \"Bad Pavement, needs to be fixed\",\n            \"creation_date\": \"2019-04-23T14:33:18+00:00\",\n            \"location\": \"(41.188403 -8.49892)\",\n            \"state\": \"Validated\",\n            \"update_date\": \"2019-04-23T14:38:38+00:00\",\n            \"author\": \"Mark\",\n            \"category\": \"ROAD_CONDITION\",\n            \"id\": 1\n        }\n    ]\n}"
+            }
+          ]
+        } ,
+        {
+          "name": "search by author" ,
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          } ,
+          "request": {
+            "method": "GET" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "name": "Content-Type" ,
+                "value": "application/json" ,
+                "type": "text"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/occurrence/search/author=Mark" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "occurrence" ,
+                "search" ,
+                "author=Mark"
+              ]
+            }
+          } ,
+          "response": [
+            {
+              "name": "search by author successfully" ,
+              "originalRequest": {
+                "method": "GET" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "value": "application/json" ,
+                    "type": "text"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"description\": \"teste\",\n\t\"author\": \"andre\",\n\t\"testlask restful\": {\n\t\"latitude\": 0,\n\t\"longitude\": 0\n\t}\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence/search/author=Mark" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence" ,
+                    "search" ,
+                    "author=Mark"
+                  ]
+                }
+              } ,
+              "status": "OK" ,
+              "code": 200 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "401"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:44:56 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"occurrences\": [\n        {\n            \"description\": \"Bad Pavement, needs to be fixed\",\n            \"creation_date\": \"2019-04-23T14:33:18+00:00\",\n            \"location\": \"(41.188403 -8.49892)\",\n            \"state\": \"Validated\",\n            \"update_date\": \"2019-04-23T14:38:38+00:00\",\n            \"author\": \"Mark\",\n            \"category\": \"ROAD_CONDITION\",\n            \"id\": 1\n        }\n    ]\n}"
+            } ,
+            {
+              "name": "author not found" ,
+              "originalRequest": {
+                "method": "GET" ,
+                "header": [
+                  {
+                    "key": "Content-Type" ,
+                    "name": "Content-Type" ,
+                    "value": "application/json" ,
+                    "type": "text"
+                  }
+                ] ,
+                "body": {
+                  "mode": "raw" ,
+                  "raw": "{\n\t\"description\": \"teste\",\n\t\"author\": \"andre\",\n\t\"testlask restful\": {\n\t\"latitude\": 0,\n\t\"longitude\": 0\n\t}\n}"
+                } ,
+                "url": {
+                  "raw": "{{url}}/occurrence/search/author=George" ,
+                  "host": [
+                    "{{url}}"
+                  ] ,
+                  "path": [
+                    "occurrence" ,
+                    "search" ,
+                    "author=George"
+                  ]
+                }
+              } ,
+              "status": "NOT FOUND" ,
+              "code": 404 ,
+              "_postman_previewlanguage": "json" ,
+              "header": [
+                {
+                  "key": "Content-Type" ,
+                  "value": "application/json"
+                } ,
+                {
+                  "key": "Content-Length" ,
+                  "value": "66"
+                } ,
+                {
+                  "key": "Server" ,
+                  "value": "Werkzeug/0.15.2 Python/3.7.0b4"
+                } ,
+                {
+                  "key": "Date" ,
+                  "value": "Tue, 23 Apr 2019 13:48:25 GMT"
+                }
+              ] ,
+              "cookie": [] ,
+              "body": "{\n    \"message\": \"There are no matches to your search criteria\"\n}"
+            }
+          ]
+        } ,
+        {
+          "name": "get all occurrences" ,
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          } ,
+          "request": {
+            "method": "GET" ,
+            "header": [
+              {
+                "key": "Content-Type" ,
+                "name": "Content-Type" ,
+                "type": "text" ,
+                "value": "application/json"
+              }
+            ] ,
+            "body": {
+              "mode": "raw" ,
+              "raw": ""
+            } ,
+            "url": {
+              "raw": "{{url}}/occurrences" ,
+              "host": [
+                "{{url}}"
+              ] ,
+              "path": [
+                "occurrences"
+              ]
+            } ,
+            "description": "List all the occurrences in the database."
+          } ,
+          "response": []
+        }
+      ]
+    }
+  ] ,
+  "event": [
+    {
+      "listen": "prerequest" ,
+      "script": {
+        "id": "3c97a9da-09e4-47bc-a581-574d35c59e1e" ,
+        "type": "text/javascript" ,
+        "exec": [
+          ""
+        ]
+      }
+    } ,
+    {
+      "listen": "test" ,
+      "script": {
+        "id": "200075e5-e072-47a0-b4b0-649a124c79da" ,
+        "type": "text/javascript" ,
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
