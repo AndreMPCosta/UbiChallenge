@@ -11,7 +11,7 @@ from resources.user import UserRegister, User, UserLogin, UserLogout
 
 app = Flask(__name__)
 load_dotenv(".env", verbose=True)
-app.config.from_object("config")  # load default configs from default_config.py
+app.config.from_object("config")  # load default configs from config.py
 app.config.from_envvar(
     "APPLICATION_SETTINGS"
 )  # override with config.py (APPLICATION_SETTINGS points to config.py)
