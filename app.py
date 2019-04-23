@@ -49,4 +49,4 @@ if __name__ == "__main__":
     db.app = app
 
     # Start Flask APP
-    app.run(port=5000, host='0.0.0.0')
+    app.run(port=5000)
