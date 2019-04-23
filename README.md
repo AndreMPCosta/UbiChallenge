@@ -6,6 +6,7 @@
 - Filtering by Author, Category and Location (within a certain radius of this location).
 
 **Authentication**
+
 This API uses JWT authentication, and some of the endpoints requires a valid JWT access token.
 
 **Error Codes**
