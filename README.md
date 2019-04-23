@@ -21,6 +21,8 @@ This API uses JWT authentication, and some of the endpoints requires a valid JWT
 Full documentation at:
 https://documenter.getpostman.com/view/1583585/S1EUuwAb
 
+A sample collection of Postman is also included in the project.
+
 **Deploy instructions:**
 
 ```bash
@@ -38,8 +40,16 @@ Note: If you do not have pipenv, install it using:
 pip install pipenv
 ```
 
+In this project it is used Postgres plus PostGIS plugin, because of the locations part. 
+If you need help setting up postgres, useful link: 
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04
+
+Regarding PostGIS: 
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postgis-on-ubuntu-14-04
+
+
 Check .env.example and configure to your needs (you can use your OS environment variables instead of the .env file)
-In this project it is used POSTGRESQL plus PostGIS plugin, because of the locations part. Fill out the .env file with the regular information regarding Database (user, password, database, host, port) and you can change the JWT Key in this file too.
+Fill out the .env file with the regular information regarding Database (user, password, database, host, port) and you can change the JWT Key in this file too.
 When you are done, rename to .env
 
 
