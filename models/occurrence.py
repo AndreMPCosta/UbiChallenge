@@ -29,15 +29,15 @@ class OccurrenceModel(db.Model):
         self.state = "Waiting Validation"
 
     @staticmethod
-    def check_category(category):
+    def check_category(category) -> bool:
         return category.upper() in categories
 
     @staticmethod
-    def check_state(state):
+    def check_state(state) -> bool:
         return state in states
 
     @staticmethod
-    def get_occurrences_within_radius(location, radius):
+    def get_occurrences_within_radius(location, radius) -> List["OccurrenceModel"]:
         """Return all occurrences within a given radius (in meters) of this location."""
         return OccurrenceModel.query.filter(func.ST_Distance_Sphere(OccurrenceModel.geo, "POINT" + location)
                                             < int(radius)).all()
